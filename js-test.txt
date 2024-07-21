@@ -1,0 +1,95 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const audio = document.getElementById('audio');
+    const playStopBtn = document.getElementById('play-stop-btn');
+    const nextSongBtn = document.getElementById('next-song-btn');
+    const previousSongBtn = document.getElementById('previous-song-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const repeatBtn = document.getElementById('repeat-btn');
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const volumeRange = document.querySelector('.volume-range');
+    const albumCover = document.getElementById('album-cover');
+    const songName = document.getElementById('song-name');
+    const artistName = document.getElementById('artist-name');
+    const albumName = document.getElementById('album-name');
+    const songLyrics = document.getElementById('song-lyrics');
+
+    let songs = [];
+    let currentSongIndex = 0;
+    let isPlaying = false;
+
+    async function fetchSongs() {
+        try {
+            const response = await fetch('music.json');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            songs = await response.json();
+            loadSong(songs[currentSongIndex]);
+        } catch (error) {
+            console.error('Error fetching songs:', error);
+        }
+    }
+
+    function loadSong(song) {
+        audio.src = song.mp3;
+        songName.textContent = song.name;
+        artistName.textContent = song.artist;
+        albumName.textContent = song.album;
+        albumCover.src = song.cover;
+        //songLyrics.textContent = song.lyrics;
+    }
+
+    function playSong() {
+        audio.play();
+        playStopBtn.querySelector('i').classList.remove('fa-play');
+        playStopBtn.querySelector('i').classList.add('fa-pause');
+        isPlaying = true;
+    }
+
+    function pauseSong() {
+        audio.pause();
+        playStopBtn.querySelector('i').classList.remove('fa-pause');
+        playStopBtn.querySelector('i').classList.add('fa-play');
+        isPlaying = false;
+    }
+
+    function playPause() {
+        isPlaying ? pauseSong() : playSong();
+    }
+
+    function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadSong(songs[currentSongIndex]);
+        playSong();
+    }
+
+    function previousSong() {
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+        loadSong(songs[currentSongIndex]);
+        playSong();
+    }
+
+    function shuffleSongs() {
+        currentSongIndex = Math.floor(Math.random() * songs.length);
+        loadSong(songs[currentSongIndex]);
+        playSong();
+    }
+
+    function repeatSong() {
+        audio.currentTime = 0;
+        playSong();
+    }
+
+    playStopBtn.addEventListener('click', playPause);
+    nextSongBtn.addEventListener('click', nextSong);
+    previousSongBtn.addEventListener('click', previousSong);
+    shuffleBtn.addEventListener('click', shuffleSongs);
+    repeatBtn.addEventListener('click', repeatSong);
+    favoriteBtn.addEventListener('click', () => {
+        favoriteBtn.querySelector('i').classList.toggle('far');
+        favoriteBtn.querySelector('i').classList.toggle('fas');
+    });
+    volumeRange.addEventListener('input', () => {
+        audio.volume = volumeRange.value / 100;
+    });
+
+    fetchSongs();
+});
