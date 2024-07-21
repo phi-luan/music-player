@@ -1,0 +1,147 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#container {
+    position: relative;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 350px;
+}
+
+#blurred-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px);
+    z-index: 1;
+}
+
+.content-overlay {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 15px;
+}
+
+.left-side img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+#song-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1vh;
+    padding: 1vh;
+    line-height: 3vh;
+}
+
+#song-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0;
+    color: white;
+}
+
+#artist-name {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+#favorite-btn {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: solid 1px;
+    border-radius: 15px;
+    padding: 3px;
+    font-size: 10px;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.5s;
+}
+
+#favorite-btn:hover {
+    opacity: 0.8;
+}
+
+#song-progress {
+    margin-top: 10px;
+}
+
+#song-choice {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#song-choice button {
+    background: none;
+    border: none;
+    border-radius: 10px;
+    padding: 3px 5px;
+    font-size: 25px;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+#song-choice button:hover {
+    opacity: 0.8;
+}
+
+.volume {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0);
+    transition: opacity 0.2s;
+}
+
+.volume i {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.volume i:hover {
+    opacity: 0.8
+}
+
+.volume input[type="range"] {
+    width: 80%;
+    margin-left: 10px;
+    color: white
+}
+
+.progress-container {
+    width: 95%;
+    margin-left: 8px;
+    height: 4px;
+    border-radius: 5px;
+    align-items: center;
+    background: #ddd;
+    cursor: pointer;
+    position: relative;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    transition: width 0.1s;
+}
+
