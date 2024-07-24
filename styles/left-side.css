@@ -2,19 +2,13 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
 }
 
-#container {
-    position: relative;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    width: 350px;
-}
 
 #blurred-bg {
     position: absolute;
@@ -22,20 +16,26 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-size: cover;
+    background-size: 100%;
     background-position: center;
-    filter: blur(40px);
+    filter: blur(40px) brightness(80%);
     z-index: 1;
 }
 
 .content-overlay {
     position: relative;
     z-index: 2;
-    padding: 20px;
+    padding: 15px 24px;
     background: rgba(0, 0, 0, 0.15);
     border-radius: 15px;
+    display: flex;
+    flex-direction: row;
 }
 
+.left-side {
+    margin: 10px 0px;
+    align-items: baseline;
+}
 .left-side img {
     width: 100%;
     border-radius: 10px;
