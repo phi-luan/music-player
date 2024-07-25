@@ -24,14 +24,14 @@
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     font-size: 14px;
-    font-weight: normal;    
-    transition: margin-left 0.5s ease;
+    font-weight: normal;
+    
 }
 
 #lyrics {
     border-radius: 10px;
     max-height: 100%;
-    
+    transition: margin-left 0.5s ease;
 }
 
 @media (min-height: 500px) {
@@ -39,5 +39,42 @@
         column-count: 2; /* Use 2 columns for larger content */
     }
 }
+
+.one-song {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    font-size: 14px;
+}
+
+.playing-next {
+    font-weight: bold;
+    font-style: italic;
+}
+
+.small-cover {
+    height: 5vh;
+    border-radius: 4px;
+    margin-right: 1vh;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.small-title, .small-artist {
+    margin: 4px 0;
+    padding: 0;
+}
+
+.small-artist {
+    opacity: 0.8;
+    font-size: 12px;
+}
+
 
 

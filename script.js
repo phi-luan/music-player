@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const repeatPlaylistBtn = document.getElementById('repeat-btn');
     const favoriteBtn = document.getElementById('favorite-btn');
     const lyricsBtn = document.getElementById('lyrics-btn');
+    const playlistBtn = document.getElementById('playlist-btn');
 
     // progress bar
     const progressBar = document.getElementById('progress-bar');
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const albumCover = document.getElementById('album-cover');
     const songLyrics = document.getElementById('song-lyrics');
     const blurredBg = document.getElementById('blurred-bg');
-    const rightSide = document.querySelector('.right-side');
 
     let songs = [];
     let originalCopy = [];
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isShuffled = false;
     let isRepeat = false;
     let lyricsShown = false;
+    let playlistShown = false;
 
     let lyricsStr;
 
@@ -60,8 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
         albumCover.src = song.cover;
         blurredBg.style.backgroundImage = `url('${song.cover}')`;
         lyricsStr = song.lyrics;
+        
         if (lyricsShown) {
-            showLyrics(); // Ensure lyrics are updated if already shown
+            showLyrics();
+        }
+
+        if (playlistShown) {
+            showPlaylist();
         }
     }
 
@@ -142,6 +148,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function repeatPlaylistOnOROFF() {
         isRepeat ? repeatPlaylistOff() : repeatPlaylistOn();
+        if (playlistShown) {
+            showPlaylist();
+        }
     }
 
     function updateProgressBar() {
@@ -161,41 +170,113 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.currentTime = (clickX / width) * duration;
     }
 
+    const lyricsElem = document.querySelector('.lyrics');
     function showLyrics() {
         lyricsShown = true;
+        hidePlaylist();
+        lyricsElem.classList.remove('hidden');
+        lyricsElem.style.marginLeft = '3vh';
         songLyrics.textContent = lyricsStr;
-        rightSide.classList.remove('hidden');
 
-        const lyricsContainer = document.getElementById('lyrics');
-        const lyricsHeight = lyricsContainer.scrollHeight; // Force reflow
+        const lyricsHeight = lyricsElem.scrollHeight;
 
-        if (lyricsHeight > 300) { // Adjust threshold as needed
-            lyricsContainer.style.columnCount = 2;
-        } 
-        else {
-            lyricsContainer.style.columnCount = 1;
+        if (lyricsHeight > 300) {
+            lyricsElem.style.columnCount = 2;
+        } else {
+            lyricsElem.style.columnCount = 1;
         }
 
         lyricsBtn.style.color = 'black';
         lyricsBtn.style.backgroundColor = 'rgba(255,255,255,0.6)';
-        rightSide.style.marginLeft = '3vh';
+
     }
 
     function hideLyrics() {
         lyricsShown = false;
+        lyricsElem.classList.add('hidden');
         songLyrics.textContent = '';
+        lyricsElem.style.columnCount = 2;
+
         lyricsBtn.style.color = 'white';
         lyricsBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
-        rightSide.classList.add('hidden');
-        rightSide.style.marginLeft = '0';
-
-        const lyricsContainer = document.getElementById('lyrics');
-        lyricsContainer.style.columnCount = 2;
     }
 
-    function lyricsInterface() {
+    function manageLyrics() {
         lyricsShown ? hideLyrics() : showLyrics();
     }
+
+
+    function showSong(song, playlistInterface) {
+        let parent = document.createElement("div");
+        let cover = document.createElement('img');
+        cover.src = song.cover;
+        cover.alt  = 'Album Cover';
+
+        let child1 = document.createElement("div");
+        let titleElem = document.createElement('p');
+        let artistElem = document.createElement('p');
+        
+
+        parent.classList.add('one-song');
+        cover.classList.add('small-cover');
+        child1.classList.add('song-details');
+        
+
+        let name = song.name;
+        let artist = song.artist;
+        titleElem.textContent = name;
+        artistElem.textContent = artist;
+
+        titleElem.classList.add('small-title');
+        artistElem.classList.add('small-artist');
+
+        child1.appendChild(titleElem);
+        child1.appendChild(artistElem);
+        parent.appendChild(cover);
+        parent.appendChild(child1);
+        playlistInterface.appendChild(parent);
+    }
+
+    const playlistElem = document.querySelector('.more-song');
+    function showPlaylist() {
+        playlistShown = true;
+        hideLyrics();
+        playlistElem.classList.remove('hidden');
+        playlistElem.style.marginLeft = '3vh';
+        playlistBtn.style.color = 'black';
+        playlistBtn.style.backgroundColor = 'rgba(255,255,255,0.6)';
+        
+        const playlistInterface = document.getElementById('next-songs');
+        playlistInterface.innerHTML = "";
+
+
+        
+        for (i = currentSongIndex  + 1; i < songs.length; i++) {
+            showSong(songs[i], playlistInterface);
+        }
+        
+        if (isRepeat) {
+            for (i = 0; i < currentSongIndex; i++) {
+                showSong(songs[i], playlistInterface);
+            }
+        }
+    
+        
+
+    }
+
+    function hidePlaylist() {
+        playlistShown = false;
+        playlistElem.classList.add('hidden');
+
+        playlistBtn.style.color = 'white';
+        playlistBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
+    }
+
+    function managePlaylist() {
+        playlistShown ? hidePlaylist() : showPlaylist();
+    }
+   
 
     // Event listeners
     playStopBtn.addEventListener('click', playPause);
@@ -205,7 +286,10 @@ document.addEventListener('DOMContentLoaded', () => {
     repeatPlaylistBtn.addEventListener('click', repeatPlaylistOnOROFF);
     audio.addEventListener('timeupdate', updateProgressBar);
     progressContainer.addEventListener('click', setProgress);
-    lyricsBtn.addEventListener('click', lyricsInterface);
+    
+    lyricsBtn.addEventListener('click', manageLyrics);
+    playlistBtn.addEventListener('click', managePlaylist);
+
 
     main();
 });
