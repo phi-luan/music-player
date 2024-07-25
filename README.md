@@ -16,7 +16,7 @@ This is a personal project aimed at practicing core JavaScript, HTML, and CSS. I
 - **JavaScript**: For interactive functionality and dynamic content updates.
 - **HTML**: For the structure and layout of the player.
 - **CSS**: For styling the player interface and adding transitions.
--
+
 ![Screenshot 2024-07-25 174144](https://github.com/user-attachments/assets/624ffa71-5ab4-4050-9125-afb969f93eee)
 
 ![Screenshot 2024-07-25 174214](https://github.com/user-attachments/assets/e14f94a9-0257-4b65-8bfd-abb816405168)
