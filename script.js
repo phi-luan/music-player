@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const previousSongBtn = document.getElementById('previous-song-btn');
     const shufflePlaylistBtn = document.getElementById('shuffle-btn');
     const repeatPlaylistBtn = document.getElementById('repeat-btn');
+    
     const favoriteBtn = document.getElementById('favorite-btn');
+    
     const lyricsBtn = document.getElementById('lyrics-btn');
     const playlistBtn = document.getElementById('playlist-btn');
 
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // volume
     const volumeRange = document.querySelector('.volume-range');
+    const volumeIcon = document.querySelector('.volume i');
 
     // modifiable elements
     const songName = document.getElementById('song-name');
@@ -34,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let playlistShown = false;
 
     let lyricsStr;
+    
+    let favoriteSongs = [];
 
     async function fetchSongs() {
         try {
@@ -49,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function main() {
         songs = await fetchSongs();
         originalCopy = JSON.parse(JSON.stringify(songs));
+        audio.volume = 0.50;
+        volumeRange.value = 50;
         if (songs.length > 0) {
             loadSong(songs[currentSongIndex]);
         }
@@ -69,7 +76,42 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playlistShown) {
             showPlaylist();
         }
+
+        for (let i = 0; i < favoriteSongs.length; i++) {
+            if (song.name === favoriteSongs[i]) {
+                favoriteBtn.querySelector('i').classList.remove('far');
+                favoriteBtn.querySelector('i').classList.add('fas');
+                return;
+            }
+        }
+        favoriteBtn.querySelector('i').classList.remove('fas');
+        favoriteBtn.querySelector('i').classList.add('far');
     }
+
+    function addToFavorite() {
+        let song = songs[currentSongIndex].name;
+        let index = favoriteSongs.findIndex(favSong => favSong === song);
+
+        if (index !== -1) {
+            // Song is already in favorites, remove it
+            favoriteSongs.splice(index, 1);
+            favoriteBtn.querySelector('i').classList.remove('fas');
+            favoriteBtn.querySelector('i').classList.add('far');
+        } 
+        else {
+            // Add song to favorites
+            favoriteSongs.push(song);
+            favoriteBtn.querySelector('i').classList.remove('far');
+            favoriteBtn.querySelector('i').classList.add('fas');
+        }
+
+        for (let i = 0; i < favoriteSongs.length; i++) {
+            console.log(favoriteSongs[i]);
+        }
+        
+    }
+
+    favoriteBtn.addEventListener('click', addToFavorite)
 
     function playSong() {
         audio.play();
@@ -174,32 +216,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLyrics() {
         lyricsShown = true;
         hidePlaylist();
-        lyricsElem.classList.remove('hidden');
         songLyrics.textContent = lyricsStr;
-
+        
         const lyricsHeight = lyricsElem.scrollHeight;
-
+        
         if (lyricsHeight > 300) {
             lyricsElem.style.columnCount = 2;
         } else {
             lyricsElem.style.columnCount = 1;
         }
-
+        
         lyricsBtn.style.color = 'black';
         lyricsBtn.style.backgroundColor = 'rgba(255,255,255,0.6)';
         lyricsElem.style.marginLeft = '3vh';
+        lyricsElem.classList.remove('hidden');
 
     }
 
     function hideLyrics() {
         lyricsShown = false;
-        lyricsElem.classList.add('hidden');
         songLyrics.textContent = '';
         lyricsElem.style.columnCount = 2;
-
         lyricsBtn.style.color = 'white';
         lyricsBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
-        lyricsElem.style.marginLeft = '0';
+        lyricsElem.style.marginLeft = '0vh';
+        lyricsElem.classList.add('hidden');
     }
 
     function manageLyrics() {
@@ -221,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
         parent.classList.add('one-song');
         cover.classList.add('small-cover');
         child1.classList.add('song-details');
-        
 
         let name = song.name;
         let artist = song.artist;
@@ -242,14 +282,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function showPlaylist() {
         playlistShown = true;
         hideLyrics();
-        playlistElem.classList.remove('hidden');
         playlistElem.style.marginLeft = '3vh';
         playlistBtn.style.color = 'black';
         playlistBtn.style.backgroundColor = 'rgba(255,255,255,0.6)';
         
         const playlistInterface = document.getElementById('next-songs');
         playlistInterface.innerHTML = "";
-
+        
         for (i = currentSongIndex  + 1; i < songs.length; i++) {
             showSong(songs[i], playlistInterface);
         }
@@ -261,19 +300,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         playlistElem.style.marginLeft = '3vh';
+        playlistElem.classList.remove('hidden');
     }
 
     function hidePlaylist() {
         playlistShown = false;
-        playlistElem.classList.add('hidden');
-
         playlistBtn.style.color = 'white';
         playlistBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
         playlistElem.style.marginLeft = '0';
+        playlistElem.classList.add('hidden');
     }
 
     function managePlaylist() {
         playlistShown ? hidePlaylist() : showPlaylist();
+    }
+
+    function controlVolume() {
+        audio.volume = volumeRange.value / 100;
+        if (volumeRange.value == 0) {
+            volumeIcon.classList.remove('fa-volume-up');
+            volumeIcon.classList.add('fa-volume-mute');
+        } else {
+            volumeIcon.classList.remove('fa-volume-mute');
+            volumeIcon.classList.add('fa-volume-up');
+        }
     }
    
 
@@ -288,7 +338,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     lyricsBtn.addEventListener('click', manageLyrics);
     playlistBtn.addEventListener('click', managePlaylist);
-
+    volumeRange.addEventListener('input', controlVolume);
+    
+    let volumeOn = true;
+    volumeIcon.addEventListener('click', () => {
+        volumeOn = !volumeOn;
+        if (!volumeOn) {
+            audio.volume = 0;
+            volumeRange.value = 0;
+            volumeIcon.classList.remove('fa-volume-up');
+            volumeIcon.classList.add('fa-volume-mute');
+        }
+        else {
+            audio.volume = 0.50;
+            volumeRange.value = 50;
+            volumeIcon.classList.remove('fa-volume-mute');
+            volumeIcon.classList.add('fa-volume-up');
+        }
+    })
 
     main();
 });
