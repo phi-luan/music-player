@@ -25,13 +25,16 @@
     color: white;
     font-size: 14px;
     font-weight: normal;
+    transition: margin-left 0.5s ease-out;
+   
     
 }
 
-#lyrics {
+#lyrics, .more-song {
     border-radius: 10px;
     max-height: 100%;
-    transition: margin-left 0.5s ease;
+    transition: margin-left 0.5s ease-out;
+    width: 350px;
 }
 
 @media (min-height: 500px) {

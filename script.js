@@ -175,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         lyricsShown = true;
         hidePlaylist();
         lyricsElem.classList.remove('hidden');
-        lyricsElem.style.marginLeft = '3vh';
         songLyrics.textContent = lyricsStr;
 
         const lyricsHeight = lyricsElem.scrollHeight;
@@ -188,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lyricsBtn.style.color = 'black';
         lyricsBtn.style.backgroundColor = 'rgba(255,255,255,0.6)';
+        lyricsElem.style.marginLeft = '3vh';
 
     }
 
@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lyricsBtn.style.color = 'white';
         lyricsBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
+        lyricsElem.style.marginLeft = '0';
     }
 
     function manageLyrics() {
@@ -249,8 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const playlistInterface = document.getElementById('next-songs');
         playlistInterface.innerHTML = "";
 
-
-        
         for (i = currentSongIndex  + 1; i < songs.length; i++) {
             showSong(songs[i], playlistInterface);
         }
@@ -260,9 +259,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 showSong(songs[i], playlistInterface);
             }
         }
-    
         
-
+        playlistElem.style.marginLeft = '3vh';
     }
 
     function hidePlaylist() {
@@ -271,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playlistBtn.style.color = 'white';
         playlistBtn.style.backgroundColor = 'rgba(0,0,0,0.15)';
+        playlistElem.style.marginLeft = '0';
     }
 
     function managePlaylist() {
